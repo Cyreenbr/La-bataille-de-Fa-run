@@ -19,5 +19,10 @@ const chateau = new Chateau();
 // Exemple d'utilisation pour plusieurs tours
 console.log(chateau.guerriers) ;
 const monChateau = new Chateau();
-monChateau.ajouterGuerrierAFileAttente(Nain);
+monChateau.ajouterGuerrierAFileAttente([nain , elfe, chefElfe]);
 console.log(monChateau.fileAttente);
+monChateau.entrainer();
+console.log(monChateau.fileAttente);
+console.log(monChateau.ressources);
+console.log(monChateau.guerriers);
+

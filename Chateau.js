@@ -40,26 +40,18 @@ class Chateau {
     }
     
 
-    //Entrainement
-    entrainerGuerriers() {
-
-        console.log(`Tour : Château possède ${this.ressources} ressources`);
-
-        let i = 0 ;
-        while (this.ressources > 0 && this.fileAttente[i] != null ){
-            do {
-                this.guerriers[this.fileAttente[i]] ++ ; 
-                this.ressources -- ;
-                i++ ;
-                
-            } while (this.fileAttente[i].bR == this.guerriers[this.fileAttente[i]]);
-
+    entrainer() {
+        for (const guerrier of this.fileAttente) {
+            const typeGuerrier = guerrier.constructor.name;
+            const coutRessources = this.besoinRessources[typeGuerrier];
+            if (coutRessources && coutRessources <= this.ressources) {
+                this.ressources -= coutRessources;
+                this.guerriers.get(typeGuerrier).push(guerrier);
+            } else {
+                console.log(`Ressources insuffisantes pour entraîner ${typeGuerrier}`);
+            }
         }
-        
-        // Réinitialisation de la file d'attente
-        this.fileAttente = [];
-
-
+        this.fileAttente = []; 
     }
 
 }
