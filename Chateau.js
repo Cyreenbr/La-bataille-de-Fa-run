@@ -2,56 +2,45 @@ class Chateau {
     constructor() {
         this.ressources = 3;
         this.fileAttente = [];
-        this.guerriers = new Map();
+        this.guerriersNovices = [];
         this.initialiserGuerriers();
 
-        this.besoinRessources = {
-            Nain: 1,
-            ChefNain: 3,
-            Elfe: 2,
-            ChefElfe: 4
-        };
     }
 
     //Initialiser l'armé
     initialiserGuerriers() {
-        this.guerriers.set(new Nain(10, 100), 0);
-        this.guerriers.set(new Nain(10, 100), 0);
-        this.guerriers.set(new Nain(10, 100), 0);
-        this.guerriers.set(new Nain(10, 100), 0);
-        this.guerriers.set(new ChefNain(10, 100), 0);
-        this.guerriers.set(new Elfe(20, 100), 0);
-        this.guerriers.set(new Elfe(20, 100), 0);
-        this.guerriers.set(new Elfe(20, 100), 0);
-        this.guerriers.set(new Elfe(20, 100), 0);
-        this.guerriers.set(new ChefElfe(40, 100), 0);
-    }
-
-    ajouterGuerrierAFileAttente(LsiteGuerrier) {
-        for (let i = 0; i < LsiteGuerrier.length; i++) {
-            if (LsiteGuerrier[i]) {
-                this.fileAttente.push(LsiteGuerrier[i]);
-            } else {
-                console.log("Type de guerrier non reconnu.");
-            }
-            
+        for (let i = 0; i < 4; i++) {
+            this.guerriersNovices.push({guerrier: new Nain(), entrainement: 1});
+            this.guerriersNovices.push({guerrier: new Elfe(), entrainement: 2});
         }
-       
+        this.guerriersNovices.push({guerrier: new ChefNain(), entrainement: 3});
+        this.guerriersNovices.push({guerrier: new ChefElfe(), entrainement: 4});
+        console.log(this.fileAttente);
+
+        
+
     }
+    
     
 
     entrainer() {
-        for (const guerrier of this.fileAttente) {
-            const typeGuerrier = guerrier.constructor.name;
-            const coutRessources = this.besoinRessources[typeGuerrier];
-            if (coutRessources && coutRessources <= this.ressources) {
-                this.ressources -= coutRessources;
-                this.guerriers.get(typeGuerrier).push(guerrier);
-            } else {
-                console.log(`Ressources insuffisantes pour entraîner ${typeGuerrier}`);
-            }
+        let i = 0 ;
+        while (i < this.fileAttente.length  && this.ressources > 0) {
+            //let guerrier = this.fileAttente.shift(); // Retire le premier guerrier de la file d'attente
+            do{
+                this.ressources -- ;
+                this.fileAttente[i].entrainement -- ;
+                console.log(i + this.fileAttente[i] + this.fileAttente[i].entrainement)
+                //decrement lel valeur entrainement de l'element -- 
+
+            }while ( this.fileAttente[i].entrainement > 0 && this.ressources > 0 );
+            i++;
         }
-        this.fileAttente = []; 
+        
+        if (this.ressources == 0) {
+            console.log("Ressources épuisées !");
+        }
     }
 
 }
+

@@ -59,4 +59,3 @@ class ChefElfe extends Elfe {
     }
 }
 
-
