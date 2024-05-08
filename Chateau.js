@@ -1,8 +1,9 @@
 class Chateau {
     constructor() {
         this.ressources = 3;
-        this.fileAttente = [];
         this.guerriersNovices = [];
+        this.fileAttente = [];
+        this.equipe = [];
         this.initialiserGuerriers();
 
     }
@@ -16,15 +17,13 @@ class Chateau {
         this.guerriersNovices.push({guerrier: new ChefNain(), entrainement: 3});
         this.guerriersNovices.push({guerrier: new ChefElfe(), entrainement: 4});
         console.log(this.fileAttente);
-
-        
+     
 
     }
-    
-    
 
     entrainer() {
         let i = 0 ;
+        console.log("longeur file",this.fileAttente.length);
         while (i < this.fileAttente.length  && this.ressources > 0) {
             //let guerrier = this.fileAttente.shift(); // Retire le premier guerrier de la file d'attente
             do{
