@@ -1,20 +1,20 @@
 // Constantes définissant les caractéristiques de base des guerriers
 const FORCE_BASE = 10;
 const PV_BASE = 100;
-const IMAGE_NAIN ='nain.png';
+const IMAGE_NAIN ='Chefelfee.png';
 const IMAGE_CHEF_NAIN ='nain.png';
-const IMAGE_ELFE='elfe.png';
-const IMAGE_CHEF_ELFE='chefelfe.png';
+const IMAGE_ELFE='chefnain.png';
+const IMAGE_CHEF_ELFE='elfe.png';
 
 
 
 //Guerrier
 class Guerrier {
 
-    constructor(force, pv , image,type) {
+    constructor(force, pv ,type) {
         this.force = force;
         this.pv = pv;
-        this.image = image; 
+        //this.image = ChefElfe; 
         this.type=type;
     }
 
@@ -35,7 +35,8 @@ class Guerrier {
 //Nain 
 class Nain extends Guerrier {
     constructor() {
-        super(FORCE_BASE, PV_BASE ,IMAGE_NAIN,"Nain"); 
+        super(FORCE_BASE, PV_BASE ,"Nain"); 
+        this.image = IMAGE_NAIN ;
     }
 
     calculerDegats() {
@@ -46,14 +47,16 @@ class Nain extends Guerrier {
 //Elfe
 class Elfe extends Guerrier {
     constructor() {
-        super(FORCE_BASE * 2, PV_BASE ,IMAGE_ELFE,"Elfe");
+        super(FORCE_BASE * 2, PV_BASE ,"Elfe");
+        this.image = IMAGE_ELFE ;
     }
 }
 
 //ChefNain
 class ChefNain extends Nain {
     constructor() {
-        super(FORCE_BASE, PV_BASE,IMAGE_CHEF_NAIN,"ChefNain" ); 
+        super(FORCE_BASE, PV_BASE,"ChefNain" ); 
+        this.image = IMAGE_CHEF_NAIN ;
     }
 
     calculerDegats() {
@@ -63,7 +66,8 @@ class ChefNain extends Nain {
 
 class ChefElfe extends Elfe {
     constructor() {
-        super(FORCE_BASE * 4 , PV_BASE ,IMAGE_CHEF_ELFE,"ChefElfe"); 
+        super(FORCE_BASE * 4 , PV_BASE ,"ChefElfe"); 
+        this.image = IMAGE_CHEF_ELFE ;
     }
 
 

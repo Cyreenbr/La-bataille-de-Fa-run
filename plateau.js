@@ -4,6 +4,10 @@ const dep_bleu = -1 ;
 var equipeRougeSurPlateau = false ;
 var equipeBleuSurPlateau = false ;
 
+var LBleu = [];
+var LRouge = [];
+var combat = false;
+
 
 class Plateau {
     constructor() {
@@ -35,14 +39,13 @@ class Plateau {
         }else{
             this.carreaux[index][0] = [];
             this.carreaux[index][0][0] = chateau.equipe[0];
-    
+
             for (let i = 0; i < chateau.fileAttente.length; i++) {
               if (chateau.fileAttente[i].entrainement === 0) {
                   this.carreaux[index][0].push(chateau.fileAttente[i].guerrier);
                   chateau.fileAttente.splice(i, 1);
-                  console.log("++++++++++++++++++++++++",chateauBleu.fileAttente);
                  i--;
-                }
+              }
             }
         }
         
@@ -57,10 +60,8 @@ class Plateau {
     afficherGuerriers(index) {
         let carreauDiv = document.getElementById(`carreau-${index}`);
         carreauDiv.innerHTML = '';
-
         for (let guerrier of this.carreaux[index]) {
-        
-          if(guerrier != null){
+          if(guerrier != null && guerrier.length > 1){
             for (let i = 1; i < guerrier.length ; i++) {
                 let guerrierImg = document.createElement('img');
                 guerrierImg.src = guerrier[i].image; 
@@ -74,6 +75,7 @@ class Plateau {
         } 
 
         console.log('le carreau',this.carreaux[index]);
+      
     }
 
     afficherDepGuerriers(index,dep){
@@ -82,56 +84,102 @@ class Plateau {
         while(carreauDiv2.firstChild){
             carreauDiv2.removeChild(carreauDiv2.firstChild);
         }
+  
+
     }
 
+    GetPositionEquipe(){
+        LBleu=[];
+        LRouge=[];
+        for (let i = 0; i < this.carreaux.length  ; i++) {
+            console.log('Current index:', i);
+            console.log('Contents of carreaux:', this.carreaux);
+            // Check if there are blue warriors in the current position
+            if ( ( Array.isArray(this.carreaux[i][0]) && this.carreaux[i][0][0]=="bleu" ) || ( Array.isArray(this.carreaux[i][1]) && this.carreaux[i][1][0]=="bleu" )) {
+                if(i==4){
 
-     
-    
-    deplacerGuerriers() {
-     try {
-    
-        let indexBleu = 1;
-        let indexRouge = this.carreaux.length - 2;
-        var combat =  false ;
-        while ( combat == false ){
-        // Déplacer un guerrier bleu vers la droite
+                }else{
+                    LBleu.push(i);
+                }
+             }
+            if (( Array.isArray(this.carreaux[i][0]) && this.carreaux[i][0][0]=="rouge" ) || ( Array.isArray(this.carreaux[i][1]) && this.carreaux[i][1][0]=="rouge" )) {
+                if(i==0){
 
-//dep bleu
-        if(  (  Array.isArray(this.carreaux[indexBleu][0]) && this.carreaux[indexBleu][0].length>= 1 )|| ( Array.isArray(this.carreaux[indexBleu][1]) && this.carreaux[indexBleu][1]>= 1)){
-            if ( this.carreaux[indexBleu][0][0]=="rouge"||this.carreaux[indexBleu][1][0]=="rouge"){
-                combat = true ;
-                position_Combat = indexBleu ;
-            }
+                }else{
+                    LRouge.push(i);
+                }
+             }
         }
+        console.log('++++++++++++++++++++++++++++++++++++++++++++bleu',LBleu);
+        console.log('++++++++++++++++++++++++++++++++++++++++++++rouge',LRouge);
+    }
 
-            this.carreaux[indexBleu].push(this.carreaux[indexBleu-1][0]);
-            this.carreaux[indexBleu-1] = [];
-            plateau.afficherDepGuerriers(indexBleu, -1);
-            indexBleu++;
+    MouvementGuerrier(positionInitial,pas,equipe,couleurAdv){
+        if ( Array.isArray(this.carreaux[positionInitial + pas])) {
+          if ( (Array.isArray(this.carreaux[positionInitial + pas][0]) &&  this.carreaux[positionInitial + pas][0][0] ==couleurAdv) || (Array.isArray(this.carreaux[positionInitial + pas][0]) &&  this.carreaux[positionInitial + pas][0][0] ==couleurAdv)) {
+            combat = true;
+            position_Combat = positionInitial + pas;
+          }
+          if ( (Array.isArray(this.carreaux[positionInitial + pas][0]) && this.carreaux[positionInitial + pas][0][0] == this.carreaux[positionInitial ][0][0]) || (Array.isArray(this.carreaux[positionInitial + pas][0]) &&  this.carreaux[positionInitial + pas][0][0] ==this.carreaux[positionInitial ][0][0])) {
+            if ( Array.isArray(this.carreaux[positionInitial ][0]) ){
+                equipe.push(this.carreaux[positionInitial][0].slice(1)[0]);
+                console.log('mon equiiiipeeeeeeeeee <3<3<3<3<3',this.carreaux[positionInitial][0].slice(1)[0]);
+
+            }
+            if ( Array.isArray(this.carreaux[positionInitial][1]) ){
+                equipe.push(this.carreaux[positionInitial][1].slice(1)[0]);
+                console.log('mon equiiiipeeeeeeeeee <3<3<3<3<3',this.carreaux[positionInitial][1]);
+
+            }
+
+          }
+
+        }
+        // Move the blue warrior to the next position
+        if( Array.isArray(this.carreaux[positionInitial + pas])){
+            this.carreaux[positionInitial + pas]= this.carreaux[positionInitial + pas].concat(this.carreaux[positionInitial]);  
+           // console.log('mon equiiiipeeeeeeeeee <3<3<3<3<3', this.carreaux[positionInitial + pas],positionInitial + pas);
+        }else{
+            this.carreaux[positionInitial + pas]= this.carreaux[positionInitial];
+           // console.log('mon equiiiipeeeeeeeeee <3<3<3<3<3', this.carreaux[positionInitial + pas]);
+  
+
+        }
+        this.carreaux[positionInitial] = [];
+        this.afficherDepGuerriers(positionInitial + pas , -pas);
+
+    }
+
+    
+    deplacerGuerriers(equipeB,equipeR){
+        try {
+            console.log('Starting to move warriors...');
+            
+            while (!combat ) {
+                console.log('Checking for combat...');
+                this.GetPositionEquipe();     
+                
+            //dep bleu
+         
+            for (let j = 0; j < LBleu.length; j++) { 
+                    this.MouvementGuerrier(LBleu[j],1,equipeB,"rouge");
+            }
+         
 
 //dep rouge
-            if(  (  Array.isArray(this.carreaux[indexRouge][0])  && this.carreaux[indexRouge][0].length>=1 )|| ( Array.isArray(this.carreaux[indexRouge][1]) && this.carreaux[indexRouge][1].length>= 1)){
-                if ( this.carreaux[indexRouge][0][0]=="bleu"||this.carreaux[indexRouge][1][0]=="bleu"){
-                    combat = true ;
-                    position_Combat = indexRouge ;
-                }
-            }
-    
-                this.carreaux[indexRouge].push(this.carreaux[indexRouge+1][0]);
-                this.carreaux[indexRouge+1] = [];
-                plateau.afficherDepGuerriers(indexRouge,1) ;        
-                indexRouge -- ;
-    
-    
+      for (let j = 0; j < LRouge.length; j++) {
+        if(!combat){
+            this.MouvementGuerrier(LRouge[j],(-1),equipeR,"bleu"); 
         }
-      
-     } catch (error) {
-        
-     }
-     
-        
+      }  
+                
+    }       
+     combat = false ;
+
+        } catch (error) {
+            console.error('Error occurred while moving warriors:', error);
+        }
     }
-    
 
     Attaquer(equipeAttaquante,equipeAttaquee){
         try {
@@ -166,13 +214,11 @@ class Plateau {
                        
                   }
                  
-          }  
-          
+          }   
             
         } catch (error) {
             
-        }
-               
+        }         
     }
 
     Tour(equipe_bleu,equipe_rouge){
@@ -183,7 +229,22 @@ class Plateau {
                 this.Attaquer(equipe_rouge,equipe_bleu);
                 console.log('tour en cours!');
               } while (equipe_bleu.length > 1 && equipe_rouge.length > 1);
-             
+              if(equipe_bleu.length == 1){
+                  for (let i = 0; i < this.carreaux[position_Combat].length; i++) {
+                    if(this.carreaux[position_Combat][i][0] == "bleu"){
+                        this.carreaux[position_Combat].splice(i,1);
+                    }
+                    
+                  }                
+              }
+              if(equipe_rouge.length == 1){
+                for (let i = 0; i < this.carreaux[position_Combat].length; i++) {
+                  if(this.carreaux[position_Combat][i][0] == "rouge"){
+                      this.carreaux[position_Combat].splice(i,1);
+                  }
+                  
+                }                
+              }
               
               console.log('tour finie!');    
               this.afficherGuerriers(position_Combat, -1);   

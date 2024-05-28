@@ -8,8 +8,15 @@ chateauRouge.equipe[0]="rouge";
 
 
 
+
 //le plateau
 const plateau = new Plateau();
+/*plateau.carreaux[1][0]=["bleu",new Nain];
+plateau.afficherGuerriers(1);
+plateau.carreaux[3][0]=["rouge",new Nain];
+plateau.afficherGuerriers(3);*/
+
+
 
 
 
@@ -35,7 +42,6 @@ function updateWaitingList(waitingList,warriorsContainer,chateau) {
     chateau.fileAttente.forEach(guerrier => {
         const imageElement = document.createElement('img');
         imageElement.src = guerrier.guerrier.image; 
-        console.log("image de nain",guerrier);
         imageElement.alt = `Image de ${guerrier.type}`; 
         imageElement.addEventListener('click', () => {
             const index = chateau.fileAttente.indexOf(guerrier);
@@ -75,7 +81,7 @@ chateauBleu.guerriersNovices.forEach((guerrier) => {
     const warriorItem = document.createElement('div');    
     const imageElement = document.createElement('img');
     imageElement.src = guerrier.guerrier.image; 
-   imageElement.alt = `Image de ${guerrier.guerrier.type}`;
+    imageElement.alt = `Image de ${guerrier.guerrier.type}`;
     warriorItem.appendChild(imageElement); 
     
     // click guerrier novice
@@ -124,7 +130,7 @@ chateauRouge.guerriersNovices.forEach((guerrier) => {
     const warriorItem = document.createElement('div');    
     const imageElement = document.createElement('img');
     imageElement.src = guerrier.guerrier.image; 
-   imageElement.alt = `Image de ${guerrier.guerrier.type}`;
+    imageElement.alt = `Image de ${guerrier.guerrier.type}`;
     warriorItem.appendChild(imageElement); 
     
     // click guerrier novice
@@ -256,8 +262,6 @@ btnEntrainerRouge.addEventListener('click', ()=>{
      plateau.afficherGuerriers(4);
     
 
- //    plateau.deplacerGuerriersRouge();
-    // console.log('tous plateaux apres rouge!!!!!!!',plateau.carreaux );
     console.log('tous plateaux!!!!!!!',plateau.carreaux );
 
      updateWaitingList(waitingListRouge,waitingListRouge,chateauRouge);
@@ -273,20 +277,26 @@ btnEntrainerRouge.addEventListener('click', ()=>{
        // }*/
 })
 
+   
 btnDeplacer.addEventListener('click', ()=>{
-    plateau.deplacerGuerriers();
+    
+    plateau.deplacerGuerriers(chateauBleu.equipe,chateauRouge.equipe);
     console.log("etat plateau",plateau);
     console.log("equipe bleu",chateauBleu.equipe);
     console.log("equipe rouge ",chateauRouge.equipe);
     plateau.Tour(chateauBleu.equipe,chateauRouge.equipe);
-    for(i=0;i<5;i++){
-        for(j=0;j<plateau.carreaux[i].length; j++){
-            
-            if(plateau.carreaux[i][j].length<=1)
-        {
-            plateau.carreaux[i].splice(j,1);
+    for(let x = 0; x < plateau.carreaux[0].length; x++){
+        if(Array.isArray(plateau.carreaux[0][x]) && plateau.carreaux[0][x][0] === "rouge"){
+            //btnDeplacer.style.display = "none";
+            console.log('END GAME');
+            break; // sort de la boucle dès qu'on trouve "rouge"
         }
-    }}
+        if(Array.isArray(plateau.carreaux[4][x]) && plateau.carreaux[4][x][0] === "bleu"){
+            //btnDeplacer.style.display = "none";
+            console.log('END GAME');
+            break; // sort de la boucle dès qu'on trouve "rouge"
+        }
+    }
    
     chateauBleu.ressources ++ ;
     chateauRouge.ressources ++ ;
@@ -296,7 +306,7 @@ btnDeplacer.addEventListener('click', ()=>{
 
     console.log("equipe bleu apres attaque ",chateauBleu);
     console.log("equipe rouge apres attaque ",chateauRouge);
-    console.log("ooo pla apres attaque",plateau);
+    console.log(" plateau apres attaque",plateau);
 
 })
 
